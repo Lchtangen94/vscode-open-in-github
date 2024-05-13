@@ -26,12 +26,56 @@
       "label": "npm",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "compile"],
+      "args": [
+        "run",
+        "compile"
+      ],
       "isBackground": true,
       "problemMatcher": "$tsc-watch",
       "group": {
         "_id": "build",
         "isDefault": false
+      }
+    },
+    {
+      "type": "docker-build",
+      "label": "docker-build",
+      "platform": "node",
+      "dockerBuild": {
+        "dockerfile": "${workspaceFolder}/node_modules/open/Dockerfile",
+        "context": "${workspaceFolder}/node_modules/open",
+        "pull": true
+      },
+      "node": {
+        "package": "${workspaceFolder}/node_modules/open/package.json"
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run: release",
+      "dependsOn": [
+        "docker-build"
+      ],
+      "platform": "node",
+      "node": {
+        "package": "${workspaceFolder}/node_modules/open/package.json"
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run: debug",
+      "dependsOn": [
+        "docker-build"
+      ],
+      "dockerRun": {
+        "env": {
+          "DEBUG": "*",
+          "NODE_ENV": "development"
+        }
+      },
+      "node": {
+        "package": "${workspaceFolder}/node_modules/open/package.json",
+        "enableDebugging": true
       }
     }
   ]
